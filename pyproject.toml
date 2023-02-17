@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "langsearch"
+version = "0.1.0"
+license = {text = "MIT License"}
+authors = [
+    {name = "Dibya Chakravorty", email = "dibyachakravorty@gmail.com"}
+]
+description = "Easily create semantic search based LLM applications based on your data"
+readme = "README.md"
+classifiers=[
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+python-requires = ">=3.9"  # because of graphlib
+dependencies = [
+    "langchain==0.0.75",
+    "openai==0.26.4",
+    "Scrapy==2.7.1",
+    "tika==2.6.0",
+    "tiktoken==0.1.2",
+    "trafilatura==1.4.1",
+    "weaviate-client==3.11.0",
+]
