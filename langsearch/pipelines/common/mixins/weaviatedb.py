@@ -1,12 +1,21 @@
 import os
+import time
 
+from requests.exceptions import ConnectionError, HTTPError
 from weaviate import Client
 
 
 class WeaviateDB:
     def __init__(self, base_url):
         # TODO: Added timeout for docker compose like setup. Look for a better solution.
-        self.client = Client(base_url, timeout_config=20)
+        # TODO: Use `startup_period` argument of `weaviate.Client` when it becomes available.
+        for _i in range(20):
+            try:
+                self.client = Client(base_url)
+            except (ConnectionError, HTTPError):
+                time.sleep(1)
+            else:
+                break
 
     def class_exists(self, class_name):
         schema = self.client.schema.get()
