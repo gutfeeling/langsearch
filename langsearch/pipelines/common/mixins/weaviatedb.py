@@ -5,7 +5,8 @@ from weaviate import Client
 
 class WeaviateDB:
     def __init__(self, base_url):
-        self.client = Client(base_url)
+        # TODO: Added timeout for docker compose like setup. Look for a better solution.
+        self.client = Client(base_url, timeout_config=20)
 
     def class_exists(self, class_name):
         schema = self.client.schema.get()

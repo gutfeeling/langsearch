@@ -21,7 +21,14 @@ class TikaPipeline(BasePipeline):
         if not hasattr(self, "url"):
             return item
         try:
-            xml_output = parser.from_buffer(self.body, xmlContent=True)["content"]
+            xml_output = parser.from_buffer(
+                self.body,
+                xmlContent=True,
+                # TODO: Added timeout for docker compose like setup. Look for a better solution.
+                requestOptions={
+                    "timeout": 20,
+                }
+            )["content"]
         except:
             message = f"Tika failed to extract text for url {self.url}"
             logger.exception(message)
