@@ -15,13 +15,8 @@ class DetectItemTypePipeline:
             item["type"] = ItemType.TEXT
             return item
         elif hasattr(response, "body"):
-            # TODO: Added timeout for docker compose like setup. Look for a better solution.
-            mime_type = detector.from_buffer(
-                response.body,
-                requestOptions={
-                    "timeout": 20,
-                }
-            )
+            # TODO: Add timeout for docker compose like setup.
+            mime_type = detector.from_buffer(response.body)
             if mime_type.startswith(("audio", "video")):
                 item["type"] = ItemType.AUDIO
                 return item
