@@ -20,6 +20,7 @@ python-requires = ">=3.9"  # because of graphlib
 dependencies = [
     "langchain==0.0.75",
     "openai==0.26.4",
+    "openai-whisper==20230124",
     "Scrapy==2.7.1",
     "tika==2.6.0",
     "tiktoken==0.1.2",
