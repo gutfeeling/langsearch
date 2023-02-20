@@ -1,9 +1,10 @@
 import datetime
+from io import BytesIO, BufferedReader
 import logging
 import os
 
 from scrapy.exceptions import DropItem
-from weaviate.util import image_decoder_b64
+from weaviate.util import image_encoder_b64, image_decoder_b64
 
 from langsearch.pipelines.base import BasePipeline
 from langsearch.pipelines.common.mixins.weaviatedb import WeaviateMixin
@@ -66,7 +67,7 @@ class BaseImageIndexPipeline(BasePipeline):
             if hasattr(self, "changed") and not self.changed:
                 self.weaviate.update_property_with_current_datetime(
                     class_name=self.class_name,
-                    where={
+                    where_filter={
                         "path": ["url"],
                         "operator": "Equal",
                         "valueString": self.url
@@ -74,18 +75,23 @@ class BaseImageIndexPipeline(BasePipeline):
                     property_name="last_seen"
                 )
             else:
-                self.weaviate.client.data_object.create(
-                    class_name=self.class_name,
-                    data_object={
-                        "url": self.url,
-                        "image": image_decoder_b64(self.body),
-                        "last_seen": datetime.datetime.now(datetime.timezone.utc).isoformat()
-                    }
-                )
+                with BytesIO(self.body) as f:
+                    base_64_encoded_image = image_encoder_b64(BufferedReader(f))
+                    self.weaviate.client.data_object.create(
+                        class_name=self.class_name,
+                        data_object={
+                            "url": self.url,
+                            "image": base_64_encoded_image,
+                            "last_seen": datetime.datetime.now(datetime.timezone.utc).isoformat()
+                        }
+                    )
         except:
             message = f"Error while processing item with URL {self.url}"
             logger.exception(message)
             raise DropItem(message)
+
+    def get_image_bytes(self, base_64_encoded_image):
+        return image_decoder_b64(base_64_encoded_image)
 
     def get_similar_images_from_text(self, text, top=4):
         return self.weaviate.get_near_text(self.class_name, text, ["url", "image", "last_seen"], top)
