@@ -20,6 +20,9 @@ class DetectItemTypePipeline:
             if mime_type.startswith(("audio", "video")):
                 item["type"] = ItemType.AUDIO
                 return item
+            elif mime_type.startswith("image"):
+                item["type"] = ItemType.IMAGE
+                return item
             else:
                 item["type"] = ItemType.OTHER
                 return item

@@ -71,29 +71,6 @@ class BaseSimpleIndexPipeline(BasePipeline):
         if not self.weaviate.class_exists(self.class_name):
             self.weaviate.create_class(self.class_schema)
 
-    def update_last_seen(self):
-        where_filter = {
-            "path": ["url"],
-            "operator": "Equal",
-            "valueString": self.url
-        }
-        result = (
-            self.weaviate.client.query
-            .get(self.class_name)
-            .with_additional(["id"])
-            .with_where(where_filter)
-            .do()
-        )
-        for element in result["data"]["Get"][self.class_name]:
-            unique_id = element["_additional"]["id"]
-            self.weaviate.client.data_object.update(
-                class_name=self.class_name,
-                uuid=unique_id,
-                data_object={
-                    "last_seen": datetime.datetime.now(datetime.timezone.utc).isoformat()
-                }
-            )
-
     def create_or_change(self):
         self.weaviate.client.batch.delete_objects(
             class_name=self.class_name,
@@ -115,13 +92,21 @@ class BaseSimpleIndexPipeline(BasePipeline):
         )
 
     def apply(self, item, spider):
-        if not hasattr(self, "url") or not isinstance(self.url, str):
+        if not hasattr(self, "url"):
             return item
-        if not hasattr(self, "sections") or self.sections is None or len(self.sections) == 0:
+        if not hasattr(self, "sections"):
             return item
         try:
             if hasattr(self, "changed") and not self.changed:
-                self.update_last_seen()
+                self.weaviate.update_property_with_current_datetime(
+                    class_name=self.class_name,
+                    where={
+                        "path": ["url"],
+                        "operator": "Equal",
+                        "valueString": self.url
+                    },
+                    property_name="last_seen"
+                )
             else:
                 self.create_or_change()
         except:
