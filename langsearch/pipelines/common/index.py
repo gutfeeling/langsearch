@@ -100,7 +100,7 @@ class BaseSimpleIndexPipeline(BasePipeline):
             if hasattr(self, "changed") and not self.changed:
                 self.weaviate.update_property_with_current_datetime(
                     class_name=self.class_name,
-                    where={
+                    where_filter={
                         "path": ["url"],
                         "operator": "Equal",
                         "valueString": self.url
