@@ -22,14 +22,14 @@ class WhisperPipeline(BasePipeline):
     }
     TRANSCRIPTION = "whisper_pipeline_transcription"
     MODEL = "tiny"
-    DECODING_OPTIONS = {}
+    TRANSCRIPTION_OPTIONS = {}
     ALLOWED_LANGUAGES = list(LANGUAGES.keys())
     OUTPUT_FORMAT = "txt"
 
-    def __init__(self, model, decoding_options, allowed_languages, output_format, *args, **kwargs):
+    def __init__(self, model, transcription_options, allowed_languages, output_format, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = whisper.load_model(model)
-        self.decoding_options = whisper.DecodingOptions(**decoding_options)
+        self.transcription_options = transcription_options
         self.allowed_languages = allowed_languages
         self.writer = get_writer(output_format, output_dir="")  # We don't use the output dir
 
@@ -41,14 +41,14 @@ class WhisperPipeline(BasePipeline):
                 f"setting with partial key MODEL of class {cls} must be a str, "
                 f"got {type(model)}"
             )
-        decoding_options = cls.get_setting_from_partial_key(crawler.settings, "DECODING_OPTIONS")
-        if not isinstance(decoding_options, dict):
+        transcription_options = cls.get_setting_from_partial_key(crawler.settings, "TRANSCRIPTION_OPTIONS")
+        if not isinstance(transcription_options, dict):
             raise SettingsError(
-                f"setting with partial key DECODING_OPTIONS of class {cls} must be a dict, "
-                f"got {type(decoding_options)}"
+                f"setting with partial key TRANSCRIPTION_OPTIONS of class {cls} must be a dict, "
+                f"got {type(transcription_options)}"
             )
         allowed_languages = cls.get_setting_from_partial_key(crawler.settings, "ALLOWED_LANGUAGES")
-        if not isinstance(decoding_options, list):
+        if not isinstance(allowed_languages, list):
             raise SettingsError(
                 f"setting with partial key ALLOWED_LANGUAGES of class {cls} must be a list, "
                 f"got {type(allowed_languages)}"
@@ -60,7 +60,7 @@ class WhisperPipeline(BasePipeline):
                 f"setting with partial key OUTPUT_FORMAT of class {cls} must be one of {allowed_output_formats}, "
                 f"got {output_format}"
             )
-        return cls(model, decoding_options, allowed_languages, output_format)
+        return cls(model, transcription_options, allowed_languages, output_format)
 
     def load_audio(self):
         try:
@@ -81,8 +81,8 @@ class WhisperPipeline(BasePipeline):
             return item
         try:
             audio = self.load_audio()
-            audio = whisper.pad_or_trim(audio)
-            mel = whisper.log_mel_spectrogram(audio).to(self.model.device)
+            audio_for_lang_detection = whisper.pad_or_trim(audio)
+            mel = whisper.log_mel_spectrogram(audio_for_lang_detection).to(self.model.device)
             # TODO: We are doing language detection twice, once here and once in transcribe(). Make this more optimal.
             _, probs = self.model.detect_language(mel)
             detected_lang = max(probs, key=probs.get)
@@ -91,7 +91,7 @@ class WhisperPipeline(BasePipeline):
                             f"is not in allowed languages {self.allowed_languages}"
                             )
                 return item
-            result = self.model.transcribe(mel, self.decoding_options)
+            result = whisper.transcribe(self.model, audio, **self.transcription_options)
             text_stream = StringIO()
             self.writer.write_result(result, file=text_stream)
             item[self.TRANSCRIPTION] = text_stream.getvalue()
