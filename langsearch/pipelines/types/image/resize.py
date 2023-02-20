@@ -50,10 +50,11 @@ class ResizeImagePipeline(BasePipeline):
         try:
             with BytesIO(self.body) as original:
                 im = Image.open(original)
+                im_format = im.format
                 resized_size = self.get_resized_size(im.size)
                 im = im.resize(resized_size, **self.resize_arguments)
                 with BytesIO() as resized:
-                    im.save(resized, format=im.format)
+                    im.save(resized, format=im_format)
                     item[self.RESIZED_BYTES] = resized.getvalue()
             return item
         except:
