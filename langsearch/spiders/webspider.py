@@ -8,11 +8,13 @@ from langsearch.exceptions import SettingsError
 class WebSpider(CrawlSpider):
     name = "langsearch_webspider"
 
-    def __init__(self, start_urls, link_extractor_allow, link_extractor_deny, deny_extensions, *args, **kwargs):
+    def __init__(self, start_urls, link_extractor_allow, link_extractor_deny, link_extractor_extra_args,
+                 *args, **kwargs
+                 ):
         if not hasattr(self, "start_urls") and start_urls is not None:
             self.start_urls = start_urls
         if len(link_extractor_allow) > 0 or len(link_extractor_deny) > 0:
-            self.rules += (self.get_rule(link_extractor_allow, link_extractor_deny, deny_extensions),)
+            self.rules += (self.get_rule(link_extractor_allow, link_extractor_deny, link_extractor_extra_args),)
         super().__init__(*args, **kwargs)
 
     @classmethod
@@ -36,19 +38,22 @@ class WebSpider(CrawlSpider):
                 f"got {type(link_extractor_deny)}"
             )
 
-        deny_extensions = crawler.settings.get("LANGSEARCH_WEB_SPIDER_DENY_EXTENSIONS",
-                                               scrapy.linkextractors.IGNORED_EXTENSIONS
-                                               )
+        link_extractor_extra_args = crawler.settings.get("LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_EXTRA_ARGS", {})
+        if not isinstance(link_extractor_extra_args, dict):
+            raise SettingsError(
+                "setting LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_EXTRA_ARGS must be a dict, "
+                f"got {type(link_extractor_extra_args)}"
+            )
 
         spider = super().from_crawler(crawler, start_urls, link_extractor_allow, link_extractor_deny,
-                                      deny_extensions, *args, **kwargs
+                                      link_extractor_extra_args, *args, **kwargs
                                       )
         return spider
 
-    def get_rule(self, link_extractor_allow, link_extractor_deny, deny_extensions):
-        link_extractor = LinkExtractor(allow=link_extractor_allow, deny=link_extractor_deny,
-                                       deny_extensions=deny_extensions
-                                       )
+    def get_rule(self, link_extractor_allow, link_extractor_deny, link_extractor_extra_args):
+        link_extractor = LinkExtractor(
+            **{**link_extractor_extra_args, "allow": link_extractor_allow, "deny": link_extractor_deny}
+            )
         return Rule(link_extractor, callback=self.parse, follow=True)
 
     def parse(self, response, **kwargs):
