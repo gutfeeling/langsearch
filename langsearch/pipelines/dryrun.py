@@ -1,15 +1,15 @@
 class DryRunPipeline:
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, filepath):
+        self.filepath = filepath
         self.file = None
 
     @classmethod
     def from_crawler(cls, crawler):
-        filename = crawler.settings.get("LANGSEARCH_DRY_RUN_PIPELINE_FILENAME", "dry_run_results.txt")
-        return cls(filename)
+        filepath = crawler.settings.get("LANGSEARCH_DRY_RUN_PIPELINE_FILEPATH", "dry_run_results.txt")
+        return cls(filepath)
 
     def open_spider(self, spider):
-        self.file = open(self.filename, "w")
+        self.file = open(self.filepath, "w")
 
     def close_spider(self, spider):
         self.file.close()
