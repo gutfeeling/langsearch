@@ -52,7 +52,7 @@ class QAChain(Chain):
             question_length = self.length_function(inputs[self.qa_chain_question_input_name])
             remaining = self.max_context_size - prompt_length - question_length - 100  # -100 for safety
             docs = self.method(inputs[self.document_search_question_input_name], token_limit=remaining,
-                               length_function=self.length_function
+                               length_function=self.length_function, top=self.top
                                )
         else:
             docs = self.method(inputs[self.document_search_question_input_name], top=self.top)
