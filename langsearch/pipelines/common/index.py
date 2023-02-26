@@ -115,6 +115,7 @@ class BaseSimpleIndexPipeline(BasePipeline):
             raise DropItem(message)
 
     def get_similar_documents(self, text, top=4, token_limit=None, length_function=None):
+        logger.debug("Top is %s", top)
         result = self.weaviate.get_near_text(self.class_name, text, ["url", "section", "last_seen"], top)
         if token_limit is not None:
             data_objects = []
@@ -124,7 +125,7 @@ class BaseSimpleIndexPipeline(BasePipeline):
                 section_token_count = length_function(section)
                 token_count += section_token_count
                 if token_count > token_limit:
-                    return data_objects
+                    break
                 data_objects.append(res)
             result = data_objects
         return [Document(page_content=item["section"], metadata={"source": item["url"]})
