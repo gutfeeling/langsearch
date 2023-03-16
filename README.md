@@ -1,4 +1,4 @@
-# LangSearch: Easy semantic search using large language models
+# LangSearch: Easily create semantic search based LLM applications for your own data
 
 ## Spiders 
 
