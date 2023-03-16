@@ -93,8 +93,8 @@ class BaseImageIndexPipeline(BasePipeline):
     def get_image_bytes(self, base_64_encoded_image):
         return image_decoder_b64(base_64_encoded_image)
 
-    def get_similar_images_from_text(self, text, top=4):
-        return self.weaviate.get_near_text(self.class_name, text, ["url", "image", "last_seen"], top)
+    def get_similar_images_from_text(self, text, limit=4):
+        return self.weaviate.get_similar(self.class_name, text, ["url", "image", "last_seen"], limit=limit)
 
     def get_similar_images_from_image(self, image, top=4):
         return self.weaviate.get_near_image(self.class_name, image, ["url", "image", "last_seen"], top)

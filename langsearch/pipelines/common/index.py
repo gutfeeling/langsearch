@@ -97,6 +97,7 @@ class BaseSimpleIndexPipeline(BasePipeline):
         if not hasattr(self, "sections"):
             return item
         try:
+            # TODO: Check if sections for this URL exists; otherwise create them
             if hasattr(self, "changed") and not self.changed:
                 self.weaviate.update_property_with_current_datetime(
                     class_name=self.class_name,
@@ -109,25 +110,14 @@ class BaseSimpleIndexPipeline(BasePipeline):
                 )
             else:
                 self.create_or_change()
+            return item
         except:
             message = f"Error while processing item with URL {self.url}"
             logger.exception(message)
             raise DropItem(message)
 
-    def get_similar_documents(self, text, top=4, token_limit=None, length_function=None):
-        logger.debug("Top is %s", top)
-        result = self.weaviate.get_near_text(self.class_name, text, ["url", "section", "last_seen"], top)
-        if token_limit is not None:
-            data_objects = []
-            token_count = 0
-            for res in result:
-                section = res["section"]
-                section_token_count = length_function(section)
-                token_count += section_token_count
-                if token_count > token_limit:
-                    break
-                data_objects.append(res)
-            result = data_objects
+    def get_similar_sections(self, text, **kwargs):
+        result = self.weaviate.get_similar(self.class_name, text, ["url", "section", "last_seen"], **kwargs)
         return [Document(page_content=item["section"], metadata={"source": item["url"]})
                 for item in result
                 ]

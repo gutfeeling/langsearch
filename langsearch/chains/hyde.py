@@ -3,7 +3,7 @@ import logging
 from langchain.chains.base import Chain
 from langchain.chains.hyde.prompts import PROMPT_MAP
 from langchain.chains.llm import LLMChain
-from langchain.llms import OpenAI
+from langchain.llms import OpenAIChat
 from pydantic import Extra
 
 from langsearch.chains.qa import QAChain
@@ -18,7 +18,7 @@ class HYDEChain(Chain):
     def __init__(self,
                  *args,
                  hyde_llm_chain=LLMChain(
-                     llm=OpenAI(temperature=0.7, model_name="text-davinci-003"),
+                     llm=OpenAIChat(temperature=0.7),
                      prompt=PROMPT_MAP["web_search"]
                  ),
                  hyde_llm_chain_question_input_name="QUESTION",

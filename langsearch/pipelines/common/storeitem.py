@@ -86,7 +86,7 @@ class BaseStoreItemPipeline(BasePipeline):
             if count > 1:
                 message = f"Found {count} data obj for unique property URL {self.url} in class {self.class_name}"
                 logger.warning(message)
-                raise DropItem(message)
+                raise RuntimeError(message)
             elif count == 0:
                 self.weaviate.client.data_object.create(
                     class_name=self.class_name,

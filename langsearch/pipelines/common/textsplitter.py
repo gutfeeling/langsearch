@@ -4,6 +4,7 @@ import tiktoken
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 from langsearch.pipelines.base import BasePipeline
+from langsearch.utils import openai_length_function
 
 logger = logging.getLogger(__name__)
 
@@ -16,9 +17,9 @@ class TextSplitterPipeline(BasePipeline):
     SECTIONS = "text_splitter_pipeline_sections"
     TEXT_SPLITTER_CLASS = RecursiveCharacterTextSplitter
     TEXT_SPLITTER_CLASS_PARAMS = {
-        "chunk_size": 600,
-        "chunk_overlap": 40,
-        "length_function": lambda text: len(tiktoken.get_encoding("gpt2").encode(text))
+        "chunk_size": 512,
+        "chunk_overlap": 0,
+        "length_function": openai_length_function
     }
     SIZE_CUTOFF = 40
 

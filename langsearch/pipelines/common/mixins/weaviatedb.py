@@ -1,10 +1,14 @@
 import datetime
+import logging
 import os
 import time
 
 from requests.exceptions import ConnectionError, HTTPError
 from weaviate import Client
 from weaviate.util import image_encoder_b64
+
+
+logger = logging.getLogger(__name__)
 
 
 class WeaviateDB:
@@ -54,15 +58,24 @@ class WeaviateDB:
                 }
             )
 
-    def get_near_text(self, class_name, similar_to, query_attrs, limit):
+    def get_similar(self, class_name, similar_to, query_attrs, limit=4, where_filter=None,
+                    distance=None, hybrid=False, alpha=0.75
+                    ):
         near_text = {"concepts": [similar_to]}
         result = (
             self.client.query
             .get(class_name, query_attrs)
-            .with_near_text(near_text)
-            .with_limit(limit)
-            .do()
         )
+        if where_filter is not None:
+            result = result.with_where(where_filter)
+        if hybrid:
+            result = result.with_hybrid(similar_to, alpha=alpha)
+        else:
+            if distance is not None:
+                near_text["distance"] = distance
+            result = result.with_near_text(near_text)
+        result = result.with_limit(limit).do()
+        logger.debug("Weaviate query result: %s", result)
         return result["data"]["Get"][class_name]
 
     def get_near_image(self, class_name, similar_to, query_attrs, limit):

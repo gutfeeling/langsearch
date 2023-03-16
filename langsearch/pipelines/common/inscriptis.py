@@ -28,7 +28,7 @@ class InscriptisPipeline(BasePipeline):
         parser_config = cls.get_setting_from_partial_key(crawler.settings, "PARSER_CONFIG")
         if not isinstance(parser_config, ParserConfig):
             raise SettingsError(
-                f"setting with partial key PARSER_CONFIG of class {self.__class__} must be a inscriptis.ParserConfig, "
+                f"setting with partial key PARSER_CONFIG of class {cls} must be a inscriptis.ParserConfig, "
                 f"got {type(parser_config)}"
             )
         return cls(parser_config)
