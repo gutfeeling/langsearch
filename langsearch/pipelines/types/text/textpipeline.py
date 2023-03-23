@@ -7,7 +7,7 @@ from langsearch.pipelines.types.enumerations import ItemType
 from langsearch.pipelines.types.text.html import HTMLFromTextPipeline
 
 
-class TextPipeline:
+class GenericTextPipeline:
     """
     Built-in pipelines should always use priorities between 400 and 600.
     """
