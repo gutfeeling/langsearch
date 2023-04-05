@@ -1,2 +1,2 @@
-Sphinx==4.1
+Sphinx==4.1  # sphinx-rtd-theme officially supports upto 4.1 currently
 sphinx-rtd-theme==1.2.0
