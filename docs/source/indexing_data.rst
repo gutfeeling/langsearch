@@ -133,4 +133,3 @@ We can extend this naturally to all the built-in pipelines in LangSearch as foll
 
 And just like that, you now have a pipeline that can index more than 1000 different MIME types including text, audio/video,
 images, pdfs, powerpoint presentations, word documents etc.
-
