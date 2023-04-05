@@ -7,11 +7,10 @@ Welcome to LangSearch's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    introduction
    quickstart
    installation
    gathering_data
    indexing_data
-
