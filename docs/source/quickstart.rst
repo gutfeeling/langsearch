@@ -119,7 +119,7 @@ steps.
 Running the crawler
 -------------------
 
-To run the crawler, first download `this docker compose file <https://example.org>`_ and place it in the ``quickstart`` folder. This docker
+To run the crawler, first download `this docker compose file <https://github.com/gutfeeling/langsearch/blob/main/examples/quickstart/docker-compose.yml>`_ and place it in the ``quickstart`` folder. This docker
 compose file is responsible for running the Weaviate vector database. Start the Weaviate instance by using the following
 command (you need to have ``docker`` installed in your system).
 
