@@ -7,7 +7,7 @@ from langsearch.pipelines.common.tika import TikaPipeline
 from langsearch.pipelines.types.enumerations import ItemType
 
 
-class OtherPipeline:
+class GenericOtherPipeline:
     ITEM_TYPE = ItemType.OTHER
 
     ITEM_PIPELINES = {

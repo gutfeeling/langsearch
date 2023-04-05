@@ -5,7 +5,7 @@ from langsearch.pipelines.types.audio.whisper import WhisperPipeline
 from langsearch.pipelines.types.enumerations import ItemType
 
 
-class AudioPipeline:
+class GenericAudioPipeline:
     """
     Built-in pipelines should always use priorities between 400 and 600.
     """

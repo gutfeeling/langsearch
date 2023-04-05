@@ -43,4 +43,3 @@ class RegexFilterMiddleware:
     def process_spider_exception(self, response, exception, spider):
         if isinstance(exception, IgnoreResponse):
             return []
-

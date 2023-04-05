@@ -4,7 +4,7 @@ from langsearch.pipelines.types.image.imageindex import ImageIndexPipeline
 from langsearch.pipelines.types.enumerations import ItemType
 
 
-class ImagePipeline:
+class GenericImagePipeline:
     """
     Built-in pipelines should always use priorities between 400 and 600.
     """
