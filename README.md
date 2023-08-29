@@ -105,17 +105,17 @@ top-level `examples` folder.
 
 ## TODO
 
-- [] Improve documentation
-- [] Write tests
-- [] Make CI pipeline for linting, building and testing
-- [] Fine tuning language model on incoming data
-- [] Handle metadata and use it in retrieval
-- [] Allow authentication (login) before crawling starts 
-- [] Support Pagerank + Vector Similarity Score + BM25 combinations
-- [] Frontera integration? 
-- [] GUI for settings
-- [] Duplicate detection in images
-- [] Ensemble methods in QA
+- [ ] Improve documentation
+- [ ] Write tests
+- [ ] Make CI pipeline for linting, building and testing
+- [ ] Fine tuning language model on incoming data
+- [ ] Handle metadata and use it in retrieval
+- [ ] Allow authentication (login) before crawling starts 
+- [ ] Support Pagerank + Vector Similarity Score + BM25 combinations
+- [ ] Frontera integration? 
+- [ ] GUI for settings
+- [ ] Duplicate detection in images
+- [ ] Ensemble methods in QA
 
 ## Contribute
 
