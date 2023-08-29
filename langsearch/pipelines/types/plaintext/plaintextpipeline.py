@@ -9,7 +9,7 @@ class GenericPlainTextPipeline:
     """
     Built-in pipelines should always use priorities between 400 and 600.
     """
-    ITEM_TYPE = ItemType.PLAINTEXT
+    ITEM_TYPE = ItemType.TEXT
 
     ITEM_PIPELINES = {
         TextSplitterPipeline: 400,
