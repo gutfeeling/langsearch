@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langsearch"
-version = "0.1.4"
+version = "0.1.5"
 license = {text = "MIT License"}
 authors = [
     {name = "Dibya Chakravorty", email = "dibyachakravorty@gmail.com"}
