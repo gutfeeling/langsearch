@@ -6,7 +6,7 @@ Introduction
 
 In this quickstart guide, we will use LangSearch to create a QA application using
 `ChatGPT <https://openai.com/blog/chatgpt>`_. Specifically, we will ask
-questions about the popular `LangChain <https://langchain.readthedocs.io/>`_ package, which was released *after*
+questions about the popular `LangChain <https://python.langchain.com>`_ package, which was released *after*
 ChatGPT's training cutoff. Therefore, ChatGPT does not know any information about LangChain a priori.
 
 The QA application will have the following features.
@@ -83,16 +83,17 @@ and add the following code.
 
 .. code-block:: python
 
-    LANGSEARCH_WEB_SPIDER_START_URLS = ["https://langchain.readthedocs.io/en/latest/"]
+    LANGSEARCH_WEB_SPIDER_START_URLS = ["https://python.langchain.com/docs/get_started/introduction"]
     LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_ALLOW = [
-        "https://langchain\.readthedocs\.io/en/latest/modules",
-        "https://langchain\.readthedocs\.io/en/latest/use_cases",
-        "https://langchain\.readthedocs\.io/en/latest/reference",
-        "https://langchain\.readthedocs\.io/en/latest/ecosystem"
+        "https://python\.langchain\.com/docs/get_started",
+        "https://python\.langchain\.com/docs/modules",
+        "https://python\.langchain\.com/docs/guides",
+        "https://python\.langchain\.com/docs/ecosystem",
+        "https://python\.langchain\.com/docs/additional_resources"
     ]
     AUTOTHROTTLE_ENABLED = True
 
-The above settings tells the crawler to start crawling from `<https://langchain.readthedocs.io/en/latest/>`_ and only
+The above settings tells the crawler to start crawling from `<https://python.langchain.com/docs/get_started/introduction>`_ and only
 follow links that match the regular expressions in ``LANGSEARCH_WEBSPIDER_LINK_EXTRACTOR_ALLOW``.
 
 The ``AUTOTHROTTLE_ENABLED = True`` setting is a Scrapy setting that ensures that we don't hit the website too hard.
@@ -106,11 +107,11 @@ steps.
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericTextPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
-        **assemble(GenericTextPipeline)
+        **assemble(GenericHTMLPipeline)
     }
 
 

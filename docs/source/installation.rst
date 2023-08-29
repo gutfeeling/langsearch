@@ -20,3 +20,5 @@ To use other pipelines provided by LangSearch, please install the corresponding 
     pip install langsearch[image]  # Downloads dependencies for GenericImagePipeline (for indexing image data)
     pip install langsearch[extras]  # Downloads dependencies for LangSearch pipelines that are not a part of any generic pipelines
     pip install langsearch[all]  # Installs all dependencies
+
+The ``GenericAudioPipeline`` also requires `ffmpeg <https://ffmpeg.org/download.html>`_ installed at the system level.

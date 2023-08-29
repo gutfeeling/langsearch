@@ -14,16 +14,16 @@ The item is then sent by the crawler to an **item pipeline**. The item pipeline 
 ``ITEM_PIPELINES`` in the ``settings.py`` file in the Scrapy project. The item pipeline takes care of indexing the
 incoming web data or local file.
 
-The code below shows the simplest item pipeline in LangSearch, which indexes any data of MIME type ``text/*``,
-which includes ``text/html`` (webpages), ``text/plain`` (text files) etc, while discarding data of any other MIME type.
+The code below shows the simplest item pipeline in LangSearch, which indexes any HTML webpage, while discarding data of
+any other MIME type.
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericTextPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
-        **assemble(GenericTextPipeline)
+        **assemble(GenericHTMLPipeline)
     }
 
 Once you run your crawler using
@@ -52,22 +52,22 @@ Let's consider what's involved in indexing a webpage, which has the mimetype ``t
 As you can see, it's a multi step process involving many steps. We can represent it in a diagram as follows (optional
 components are omitted).
 
-.. figure:: ./images/text_pipeline.drawio.svg
+.. figure:: ./images/html_pipeline.drawio.svg
     :align: center
 
-    Components of ``GenericTextPipeline``
+    Components of ``GenericHTMLPipeline``
 
-In LangSearch, we have a class called ``GenericTextPipeline`` that handles all of the steps above. You use it by
+In LangSearch, we have a class called ``GenericHTMLPipeline`` that handles all of the steps above. You use it by
 specifying the ``ITEM_PIPELINES`` setting as follows in the ``settings.py`` file.
 
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericTextPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
-        **assemble(GenericTextPipeline)
+        **assemble(GenericHTMLPipeline)
     }
 
 Don't worry about the ``DetectItemTypePipeline`` and the ``assemble()`` function just yet. We will come to them in a
@@ -85,7 +85,8 @@ of the above steps for you. To use it, you need to specify your ``ITEM_PIPELINES
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericAudioPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline
+    from langsearch.pipelines.types.audio.audiopipeline import GenericAudioPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
@@ -95,7 +96,7 @@ of the above steps for you. To use it, you need to specify your ``ITEM_PIPELINES
 Now imagine a scenario where the incoming data can be either audio or text. In this case, we need a combined pipeline
 like the one shown below.
 
-.. figure:: ./images/text_plus_audio_pipeline.drawio.svg
+.. figure:: ./images/audio_plus_text_pipeline.drawio.svg
     :align: center
 
     Combined pipeline that can handle both text and audio
@@ -107,11 +108,12 @@ The code to create this combined pipeline in LangSearch is as simple as the foll
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericTextPipeline, GenericAudioPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
+    from langsearch.pipelines.types.audio.audiopipeline import GenericAudioPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
-        **assemble(GenericTextPipeline, GenericAudioPipeline)
+        **assemble(GenericHTMLPipeline, GenericAudioPipeline)
     }
 
 With this example, we can now finally understand what the ``DetectItemTypePipeline`` class and the ``assemble()``
@@ -124,12 +126,16 @@ We can extend this naturally to all the built-in pipelines in LangSearch as foll
 
 .. code-block:: python
 
-    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericTextPipeline, GenericAudioPipeline, GenericImagePipeline, GenericOtherPipeline
+    from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
+    from langsearch.pipelines.types.plaintext.plaintextpipeline import GenereicPlainTextPipeline
+    from langsearch.pipelines.types.audio.audiopipeline import GenericAudioPipeline
+    from langsearch.pipelines.types.image.imagepipeline import GenericImagePipeline
+    from langsearch.pipelines.types.other.otherpipeline import GenericOtherPipeline
 
     ITEM_PIPELINES = {
         DetectItemTypePipeline: 100,
-        **assemble(GenericTextPipeline, GenericAudioPipeline, GenericImagePipeline, GenericOtherPipeline)
+        **assemble(GenericPlainTextPipeline, GenericHTMLPipeline, GenericAudioPipeline, GenericImagePipeline, GenericOtherPipeline)
     }
 
-And just like that, you now have a pipeline that can index more than 1000 different MIME types including text, audio/video,
-images, pdfs, powerpoint presentations, word documents etc.
+And just like that, you now have a pipeline that can index more than 1000 different MIME types including plain text,
+html, audio/video, images, pdfs, powerpoint presentations, word documents etc.
