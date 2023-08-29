@@ -9,15 +9,15 @@ services:
       QUERY_DEFAULTS_LIMIT: 20
       AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
       PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
-      ENABLE_MODULES: text2vec-transformers
-      TRANSFORMERS_INFERENCE_API: http://t2v-transformers:8080
-      CLUSTER_HOSTNAME: "langchain_qa"
+      ENABLE_MODULES: "multi2vec-clip"
+      CLIP_INFERENCE_API: "http://multi2vec-clip:8080"
+      CLUSTER_HOSTNAME: "unsplash_nature"
     volumes:
       - ./weaviate_data:/var/lib/weaviate
     depends_on:
-      - t2v-transformers
-  t2v-transformers:
-    image: semitechnologies/transformers-inference:sentence-transformers-gtr-t5-base
+      - multi2vec-clip
+  multi2vec-clip:
+    image: semitechnologies/multi2vec-clip:sentence-transformers-clip-ViT-B-32-multilingual-v1
     environment:
       ENABLE_CUDA: 0  # Change this to 1 to use your GPU
     # Uncomment the following to use your NVIDIA GPU
@@ -28,3 +28,7 @@ services:
     #        - driver: nvidia
     #          count: 1
     #          capabilities: [ gpu ]
+  tika:
+    image: apache/tika:latest-full
+    ports:
+      - "9998:9998"

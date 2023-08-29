@@ -11,7 +11,7 @@ services:
       PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
       ENABLE_MODULES: text2vec-transformers
       TRANSFORMERS_INFERENCE_API: http://t2v-transformers:8080
-      CLUSTER_HOSTNAME: "langchain_qa"
+      CLUSTER_HOSTNAME: "langsearch"
     volumes:
       - ./weaviate_data:/var/lib/weaviate
     depends_on:
@@ -28,3 +28,8 @@ services:
     #        - driver: nvidia
     #          count: 1
     #          capabilities: [ gpu ]
+
+  tika:
+    image: apache/tika:latest-full
+    ports:
+      - "9998:9998"

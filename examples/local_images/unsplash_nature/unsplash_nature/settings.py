@@ -1,4 +1,4 @@
-# Scrapy settings for langchain_qa project
+# Scrapy settings for unsplash_nature project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,16 +7,18 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
+from pathlib import Path
+from langsearch.pipelines import assemble, DetectItemTypePipeline
+from langsearch.pipelines.types.image.imagepipeline import GenericImagePipeline
 
-BOT_NAME = 'langchain_qa'
+BOT_NAME = 'unsplash_nature'
 
-SPIDER_MODULES = ['langchain_qa.spiders']
-NEWSPIDER_MODULE = 'langchain_qa.spiders'
+SPIDER_MODULES = ['unsplash_nature.spiders']
+NEWSPIDER_MODULE = 'unsplash_nature.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'langchain_qa (+http://www.yourdomain.com)'
+#USER_AGENT = 'unsplash_nature (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +49,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'langchain_qa.middlewares.LangchainQaSpiderMiddleware': 543,
+#    'unsplash_nature.middlewares.UnsplashNatureSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'langchain_qa.middlewares.LangchainQaDownloaderMiddleware': 543,
+#    'unsplash_nature.middlewares.UnsplashNatureDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +67,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'langchain_qa.pipelines.LangchainQaPipeline': 300,
+#    'unsplash_nature.pipelines.UnsplashNaturePipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -93,17 +95,11 @@ ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
 TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
-LANGSEARCH_WEB_SPIDER_START_URLS = ["https://python.langchain.com/docs/get_started/introduction"]
-LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_ALLOW = [
-    "https://python\.langchain\.com/docs/get_started",
-    "https://python\.langchain\.com/docs/modules",
-    "https://python\.langchain\.com/docs/guides",
-    "https://python\.langchain\.com/docs/ecosystem",
-    "https://python\.langchain\.com/docs/additional_resources"
-]
-AUTOTHROTTLE_ENABLED = True
+LANGSEARCH_FILE_SPIDER_START_FOLDERS = [str(Path(__file__).parents[2].absolute() / "bulksplash")]
 
 ITEM_PIPELINES = {
     DetectItemTypePipeline: 100,
-    **assemble(GenericHTMLPipeline)
+    **assemble(GenericImagePipeline)
 }
+
+LANGSEARCH_RESIZEIMAGEPIPELINE_RESIZED_WIDTH = 500

@@ -1,4 +1,4 @@
-# Scrapy settings for langchain_qa project
+# Scrapy settings for langsearch_crawler project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,16 +7,20 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from langsearch.pipelines import assemble, DetectItemTypePipeline, GenericHTMLPipeline
+from pathlib import Path
+from langsearch.pipelines import assemble, DetectItemTypePipeline
+from langsearch.pipelines.types.plaintext.plaintextpipeline import GenericPlainTextPipeline
+from langsearch.pipelines.types.other.otherpipeline import GenericOtherPipeline
 
-BOT_NAME = 'langchain_qa'
 
-SPIDER_MODULES = ['langchain_qa.spiders']
-NEWSPIDER_MODULE = 'langchain_qa.spiders'
+BOT_NAME = 'langsearch_crawler'
+
+SPIDER_MODULES = ['langsearch_crawler.spiders']
+NEWSPIDER_MODULE = 'langsearch_crawler.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'langchain_qa (+http://www.yourdomain.com)'
+#USER_AGENT = 'langsearch_crawler (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +51,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'langchain_qa.middlewares.LangchainQaSpiderMiddleware': 543,
+#    'langsearch_crawler.middlewares.LangsearchCrawlerSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'langchain_qa.middlewares.LangchainQaDownloaderMiddleware': 543,
+#    'langsearch_crawler.middlewares.LangsearchCrawlerDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -65,7 +69,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 #ITEM_PIPELINES = {
-#    'langchain_qa.pipelines.LangchainQaPipeline': 300,
+#    'langsearch_crawler.pipelines.LangsearchCrawlerPipeline': 300,
 #}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -93,17 +97,17 @@ ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
 TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
-LANGSEARCH_WEB_SPIDER_START_URLS = ["https://python.langchain.com/docs/get_started/introduction"]
-LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_ALLOW = [
-    "https://python\.langchain\.com/docs/get_started",
-    "https://python\.langchain\.com/docs/modules",
-    "https://python\.langchain\.com/docs/guides",
-    "https://python\.langchain\.com/docs/ecosystem",
-    "https://python\.langchain\.com/docs/additional_resources"
+LANGSEARCH_FILE_SPIDER_START_FOLDERS = [
+    Path(__file__).parents[4].absolute() / "langsearch",
+    Path(__file__).parents[2].absolute() / "langsearch_docs"
 ]
-AUTOTHROTTLE_ENABLED = True
+LANGSEARCH_FILE_SPIDER_FOLLOW_SUBFOLDERS = True
+LANGSEARCH_FILE_SPIDER_ALLOW = [
+    "\.py$",
+    "\.pdf$"
+]
 
 ITEM_PIPELINES = {
     DetectItemTypePipeline: 100,
-    **assemble(GenericHTMLPipeline)
+    **assemble(GenericPlainTextPipeline, GenericOtherPipeline)
 }
