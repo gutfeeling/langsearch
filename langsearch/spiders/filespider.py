@@ -72,8 +72,6 @@ class FileSpider(Spider):
 
     def get_files(self, folder):
         for child in folder.iterdir():
-            if self.filtered(child):
-                continue
             if child.is_symlink():
                 if self.follow_symlinks:
                     child = child.resolve()
@@ -84,7 +82,7 @@ class FileSpider(Spider):
             if child.is_dir():
                 if self.follow_subfolders:
                     yield from self.get_files(child)
-            else:
+            elif not self.filtered(child):
                 yield child
 
     def start_requests(self):
