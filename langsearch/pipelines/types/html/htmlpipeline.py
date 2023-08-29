@@ -4,17 +4,17 @@ from langsearch.pipelines.common.textsplitter import TextSplitterPipeline
 from langsearch.pipelines.common.python_readability import PythonReadabilityPipeline
 from langsearch.pipelines.common.inscriptis import InscriptisPipeline
 from langsearch.pipelines.types.enumerations import ItemType
-from langsearch.pipelines.types.text.html import HTMLFromTextPipeline
+from langsearch.pipelines.types.html.fix_html import FixHTMLPipeline
 
 
-class GenericTextPipeline:
+class GenericHTMLPipeline:
     """
     Built-in pipelines should always use priorities between 400 and 600.
     """
-    ITEM_TYPE = ItemType.TEXT
+    ITEM_TYPE = ItemType.HTML
 
     ITEM_PIPELINES = {
-        HTMLFromTextPipeline: 400,
+        FixHTMLPipeline: 400,
         PythonReadabilityPipeline: 410,
         InscriptisPipeline: 420,
         TextSplitterPipeline: 430,
@@ -22,13 +22,13 @@ class GenericTextPipeline:
         SimpleIndexPipeline: 450
     }
 
-    HTML_FROM_TEXT_PIPELINE_INPUTS = {
-        "text": lambda item: getattr(item["response"], "text"),
+    FIX_HTML_PIPELINE_INPUTS = {
+        "html": lambda item: getattr(item["response"], "text"),
         "url": lambda item: getattr(item["response"], "url")
     }
 
     PYTHON_READABILITY_PIPELINE_INPUTS = {
-        "html": HTMLFromTextPipeline.HTML,
+        "html": FixHTMLPipeline.FIXED_HTML,
         "url": lambda item: getattr(item["response"], "url")
     }
 
@@ -54,7 +54,7 @@ class GenericTextPipeline:
     }
 
     PIPELINE_INPUTS = {
-        HTMLFromTextPipeline: HTML_FROM_TEXT_PIPELINE_INPUTS,
+        FixHTMLPipeline: FIX_HTML_PIPELINE_INPUTS,
         PythonReadabilityPipeline: PYTHON_READABILITY_PIPELINE_INPUTS,
         InscriptisPipeline: INSCRIPTIS_PIPELINE_INPUTS,
         TextSplitterPipeline: TEXT_SPLITTER_PIPELINE_INPUTS,
