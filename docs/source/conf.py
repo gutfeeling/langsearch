@@ -9,7 +9,7 @@
 project = 'langsearch'
 copyright = '2023, Dibya Chakravorty'
 author = 'Dibya Chakravorty'
-release = '0.1.5'
+release = '0.1.8'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
