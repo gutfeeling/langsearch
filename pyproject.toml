@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "langsearch"
-version = "0.1.7"
+version = "0.1.8"
 license = {text = "MIT License"}
 authors = [
     {name = "Dibya Chakravorty", email = "dibyachakravorty@gmail.com"}
@@ -23,6 +23,7 @@ dependencies = [
     "langdetect==1.0.9",
     "openai==0.27.0",
     "readability-lxml==0.8.1",
+    "Twisted==22.10.0",
     "Scrapy==2.7.1",
     "tika==2.6.0",
     "tiktoken==0.1.2",
