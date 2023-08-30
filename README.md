@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/langsearch/badge/?version=latest)](https://langsearch.dibya.online/en/latest/?badge=latest)
+
 # LangSearch: Easily create semantic search based LLM applications
 
 ## What is this?
