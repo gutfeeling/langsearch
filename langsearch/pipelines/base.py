@@ -12,6 +12,39 @@ logger = logging.getLogger(__name__)
 
 # TODO: Use ItemAdapter in all pipelines
 class BasePipeline:
+    """
+    INPUTS are used in child pipelines to declare the required item keys that pipeline needs
+    Let's say a child pipeline declares
+    ```
+    INPUTS = {
+        "html": "html",
+        "url": "url"
+    }
+    ```
+    This means that the child pipeline expects the `prepare_inputs(self, item)` method to set `self.html` and
+    `self.url` to the correct item keys that contain this information for that ItemType.
+    So this is done on a per-item basis.
+    If a required instance variable is set to None by `prepare_inputs`, this means that the child pipeline doesn't need
+    to operate on this ItemType and should just skip it.
+
+    `prepare_inputs(self, item)` knows how to find the correct item keys for each ItemType because the orchestrating
+    `assemble` function sets INPUTS for each pipeline, and it actually looks like this at runtime.
+    ```
+    INPUTS = {
+        "html": {
+            ItemType.HTML: FixHTMLPipeline.FIXED_HTML,
+            ItemType.OTHER: TikaPipeline.XML_OUTPUT,
+            # ... more item types
+        }, # Sometimes, instead of using a dict, we use a callable. Use callable(item) to get the required key name.
+        # Sometimes, we just use a value, meaning that all ItemTypes should use that value
+
+        # ... other required instance variables
+    }
+    ```
+    So the INPUTS that you see in the child pipeline definition is only an indication using defaults and a static item
+    key (independent of ItemType). It will look different at runtime because it is dynamically modified by `assemble`
+    before the scraping process launches.
+    """
     INPUTS = {}
 
     def __init__(self, *args, **kwargs):
