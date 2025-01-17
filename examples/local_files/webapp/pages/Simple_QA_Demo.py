@@ -17,7 +17,7 @@ qa_prompt = PromptTemplate(template=qa_template, input_variables=["context", "qu
 st.title("Simple Question Answering Demo")
 st.text_input("Type your question here", key="simple_question")
 qa_chain = load_qa_chain(
-    llm=OpenAI(temperature=0, model_name="text-davinci-003"),
+    llm=OpenAI(temperature=0, model="gpt-3.5-turbo-instruct"),
     prompt=qa_prompt,
 )
 question = st.session_state.simple_question
