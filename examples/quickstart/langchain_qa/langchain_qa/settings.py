@@ -93,13 +93,16 @@ ROBOTSTXT_OBEY = True
 REQUEST_FINGERPRINTER_IMPLEMENTATION = '2.7'
 TWISTED_REACTOR = 'twisted.internet.asyncioreactor.AsyncioSelectorReactor'
 
-LANGSEARCH_WEB_SPIDER_START_URLS = ["https://python.langchain.com/docs/get_started/introduction"]
+LANGSEARCH_WEB_SPIDER_START_URLS = ["https://python.langchain.com/docs/introduction"]
 LANGSEARCH_WEB_SPIDER_LINK_EXTRACTOR_ALLOW = [
-    "https://python\.langchain\.com/docs/get_started",
-    "https://python\.langchain\.com/docs/modules",
-    "https://python\.langchain\.com/docs/guides",
-    "https://python\.langchain\.com/docs/ecosystem",
-    "https://python\.langchain\.com/docs/additional_resources"
+    "https://python\.langchain\.com/docs/tutorials",
+    "https://python\.langchain\.com/docs/how_to",
+    "https://python\.langchain\.com/docs/concepts",
+    "https://python\.langchain\.com/docs/integrations",
+    "https://python\.langchain\.com/docs/api_reference",
+    "https://python\.langchain\.com/docs/contributing",
+    "https://python\.langchain\.com/docs/people",
+    "https://python\.langchain\.com/docs/troubleshooting",
 ]
 AUTOTHROTTLE_ENABLED = True
 
